@@ -9,6 +9,7 @@
         <Copyright>Pantheon Temple</Copyright>
         <PackageProjectUrl>https://github.com/patheon-temple/athena</PackageProjectUrl>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/patheon-temple/athena</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>patheon,athena</PackageTags>
