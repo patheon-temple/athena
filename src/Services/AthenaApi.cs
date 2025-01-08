@@ -7,7 +7,7 @@ using Athena.SDK.Models;
 
 namespace Athena.SDK.Services
 {
-    internal sealed class AthenaApi : IAthenaApi
+    public sealed class AthenaApi : IAthenaApi
     {
         private readonly IPasswordService _passwordService;
         private readonly IAthenaRepository _athenaRepository;
