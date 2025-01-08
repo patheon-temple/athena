@@ -2,8 +2,23 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <Nullable>enable</Nullable>
+        <PackageId>Pantheon.Athena.SDK</PackageId>
+        <Title>Pantheon.Athena.SDK</Title>
+        <Authors>Pantheon Temple</Authors>
+        <Description>Core service for managing user identities. This package should not have any other Pantheon services as dependencies, meaning this is one of the root packages. </Description>
+        <Copyright>Pantheon Temple</Copyright>
+        <PackageProjectUrl>https://github.com/patheon-temple/athena</PackageProjectUrl>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <RepositoryUrl>https://github.com/patheon-temple/athena</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>patheon,athena</PackageTags>
+        <Version>1.0.1</Version>
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="FluentValidation" Version="11.11.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 </Project>
