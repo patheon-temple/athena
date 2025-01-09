@@ -23,7 +23,7 @@ public class AthenaMongoDbRepository : IUserRepository, IServiceRepository, IDis
 
     public void Dispose()
     {
-        // TODO release managed resources here
+        
     }
 
     public async Task<PantheonUser?> GetUserAccountByDeviceIdAsync(string deviceId, CancellationToken cancellationToken)
