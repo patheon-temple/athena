@@ -8,7 +8,7 @@ namespace Athena.SDK.Models
         public string? DeviceId { get; set; }
         public byte[]? PasswordHash { get; set; }
 
-        public string[] Scopes { get; set; } = Array.Empty<string>();
+        public string[] Claims { get; set; } = Array.Empty<string>();
         public string? Username { get; set; }
     }
 }

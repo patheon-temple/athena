@@ -28,7 +28,7 @@ namespace Athena.SDK.Services
             string? deviceId,
             string? username,
             string? password,
-            string[] scopes,
+            string[] claims,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(deviceId) && string.IsNullOrWhiteSpace(username))
@@ -40,11 +40,11 @@ namespace Athena.SDK.Services
                 await IsUsernameAndPasswordValidOrThrowAsync(username, password, cancellationToken);
             }
 
-            scopes = scopes.Where(x => !x.Equals(GlobalDefinitions.Scopes.Superuser)).ToArray();
+            claims = claims.Where(x => !x.Equals(GlobalDefinitions.Claims.Superuser)).ToArray();
 
            return await _userRepository.CreateUserAccountAsync(new PantheonUser
             {
-                Scopes = scopes,
+                Claims = claims,
                 PasswordHash = string.IsNullOrWhiteSpace(password) ? null : Passwords.HashPassword(password),
                 Username = username?.ToLower(),
                 DeviceId = deviceId
@@ -72,13 +72,13 @@ namespace Athena.SDK.Services
             if (!validationResult.IsValid) throw new ValidationException(validationResult.Errors);
         }
 
-        public async Task<PantheonService> CreateServiceAccountAsync(string serviceName, string[] requiredScopes,
+        public async Task<PantheonService> CreateServiceAccountAsync(string serviceName, string[] claims,
             CancellationToken cancellationToken = default)
         {
-            requiredScopes = requiredScopes.Where(x => !x.Equals(GlobalDefinitions.Scopes.Superuser)).ToArray();
+            claims = claims.Where(x => !x.Equals(GlobalDefinitions.Claims.Superuser)).ToArray();
             return await _serviceRepository.CreateServiceAccountAsync(new PantheonService
             {
-                Scopes = requiredScopes,
+                Claims = claims,
                 AuthorizationCode = Encoding.UTF8.GetBytes(GuidFormatters.Stringyfi(Guid.NewGuid())),
                 Name = serviceName,
             }, cancellationToken);

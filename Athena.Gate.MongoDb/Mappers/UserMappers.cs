@@ -10,7 +10,7 @@ public static class UserMappers
         return new PantheonUser
         {
             Id = dataModel.Id,
-            Scopes = dataModel.Scopes,
+            Claims = dataModel.Claims,
             DeviceId = dataModel.DeviceId,
             PasswordHash = dataModel.PasswordHash,
             Username = dataModel.Username
@@ -22,7 +22,7 @@ public static class UserMappers
         return new UserAccountMongoDataModel
         {
             Id = dataModel.Id,
-            Scopes = dataModel.Scopes,
+            Claims = dataModel.Claims,
             Username = dataModel.Username,
             DeviceId = dataModel.DeviceId,
             PasswordHash = dataModel.PasswordHash,

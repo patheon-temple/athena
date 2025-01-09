@@ -11,12 +11,12 @@ namespace Athena.SDK
             string? deviceId,
             string? username,
             string? password,
-            string[] scopes,
+            string[] claims,
             CancellationToken cancellationToken = default);
 
         Task<PantheonUser?> GetUserAccountByIdAsync(string id, CancellationToken cancellationToken = default);
 
-        Task<PantheonService> CreateServiceAccountAsync(string serviceName, string[] requiredScopes,
+        Task<PantheonService> CreateServiceAccountAsync(string serviceName, string[] claims,
             CancellationToken cancellationToken = default);
 
         Task<PantheonService?> GetServiceAccountByIdAsync(string serviceId,

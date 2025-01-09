@@ -10,7 +10,7 @@ namespace Athena.SDK.Definitions
             public const string AccountType = "actp";
         }
 
-        public static class Scopes
+        public static class Claims
         {
             public const string Superuser = "superuser";
         }

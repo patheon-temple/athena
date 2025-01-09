@@ -7,5 +7,5 @@ public class CreateServiceAccountRequest
     [MaxLength(256)]
     public required string ServiceName { get; set; }
     
-    public string[] Scopes { get; set; } = Array.Empty<string>();
+    public string[] Claims { get; set; } = [];
 }

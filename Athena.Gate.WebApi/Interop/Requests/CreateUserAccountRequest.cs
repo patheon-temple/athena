@@ -5,5 +5,5 @@ public class CreateUserAccountRequest
     public string? Username { get; set; }
     public string? Password { get; set; }
     public string? DeviceId { get; set; }
-    public string[] Scopes { get; set; } = [];
+    public string[] Claims { get; set; } = [];
 }

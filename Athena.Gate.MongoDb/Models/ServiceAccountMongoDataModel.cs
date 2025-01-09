@@ -10,7 +10,7 @@ public class ServiceAccountMongoDataModel
 
     [BsonIgnoreIfDefault] public byte[] AuthorizationCode { get; set; } = [];
 
-    [BsonIgnoreIfDefault] public string[] Scopes { get; set; } = [];
+    [BsonIgnoreIfDefault] public string[] Claims { get; set; } = [];
 
     [BsonIgnoreIfDefault] public string Name { get; set; } = string.Empty;
 }

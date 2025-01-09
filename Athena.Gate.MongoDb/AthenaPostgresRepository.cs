@@ -4,11 +4,7 @@ using Athena.SDK.Models;
 using Athena.SDK.Services;
 using MongoDB.Driver;
 
-public interface IAthenaMongoCollectionSettings
-{
-    string UserAccountsCollectionName { get; }
-    string ServiceAccountsCollectionName { get; }
-}
+namespace Athena.Gate.MongoDb;
 
 public class AthenaMongoDbRepository : IUserRepository, IServiceRepository, IDisposable
 {
