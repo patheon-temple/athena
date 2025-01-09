@@ -20,17 +20,6 @@ public static class ServiceInstaller
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        services.AddTransient<IValidator<UserCredentialsValidationParams>>(x => Passwords.CreateValidator());
+        services.AddTransient<IValidator<UserCredentialsValidationParams>>(_ => Passwords.CreateValidator());
     }
-
-#if ATHENA_POSTGRES
-    public static void InstallPostgresServices(IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddScoped<IAthenaRepository, AthenaRepository>();
-        services.AddPooledDbContextFactory<AthenaDbContext>(opt =>
-            opt.UseNpgsql(
-                configuration.GetConnectionString(GlobalDefinitions.ConfigurationKeys.PostgresConnectionString),
-                x => x.MigrationsHistoryTable("__EFMigrationsHistory", "athena")));
-    }
-#endif
 }
