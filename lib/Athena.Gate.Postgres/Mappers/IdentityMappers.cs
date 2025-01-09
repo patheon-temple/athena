@@ -12,7 +12,7 @@ public static class IdentityMappers
         Id = GuidFormatters.Stringyfi(data.Id),
         PasswordHash = data.PasswordHash,
         Username = data.Username,
-        Claims = data.Claims.Select(x => x.Id).ToArray(),
+        Roles = data.Roles.Select(x => x.Id).ToArray(),
     };
 
     public static UserAccountDataModel ToDataModel(PantheonUser user)=>new ()
@@ -21,7 +21,7 @@ public static class IdentityMappers
         Id = string.IsNullOrWhiteSpace(user.Id) ? Guid.NewGuid() : Guid.Parse(user.Id),
         PasswordHash = user.PasswordHash,
         Username = user.Username,
-        Claims = user.Claims.Select(x => new UserClaimDataModel
+        Roles = user.Roles.Select(x => new UserRoleDataModel
         {
             Id = x
         }).ToList(),

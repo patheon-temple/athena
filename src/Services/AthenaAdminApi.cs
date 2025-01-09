@@ -28,7 +28,7 @@ namespace Athena.SDK.Services
             string? deviceId,
             string? username,
             string? password,
-            string[] claims,
+            string[] roles,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(deviceId) && string.IsNullOrWhiteSpace(username))
@@ -40,11 +40,11 @@ namespace Athena.SDK.Services
                 await IsUsernameAndPasswordValidOrThrowAsync(username, password, cancellationToken);
             }
 
-            claims = claims.Where(x => !x.Equals(GlobalDefinitions.Claims.Superuser)).ToArray();
+            roles = roles.Where(x => !x.Equals(GlobalDefinitions.Roles.Superuser)).ToArray();
 
            return await _userRepository.CreateUserAccountAsync(new PantheonUser
             {
-                Claims = claims,
+                Roles = roles,
                 PasswordHash = string.IsNullOrWhiteSpace(password) ? null : Passwords.HashPassword(password),
                 Username = username?.ToLower(),
                 DeviceId = deviceId
@@ -72,13 +72,13 @@ namespace Athena.SDK.Services
             if (!validationResult.IsValid) throw new ValidationException(validationResult.Errors);
         }
 
-        public async Task<PantheonService> CreateServiceAccountAsync(string serviceName, string[] claims,
+        public async Task<PantheonService> CreateServiceAccountAsync(string serviceName, string[] roles,
             CancellationToken cancellationToken = default)
         {
-            claims = claims.Where(x => !x.Equals(GlobalDefinitions.Claims.Superuser)).ToArray();
+            roles = roles.Where(x => !x.Equals(GlobalDefinitions.Roles.Superuser)).ToArray();
             return await _serviceRepository.CreateServiceAccountAsync(new PantheonService
             {
-                Claims = claims,
+                Roles = roles,
                 AuthorizationCode = Encoding.UTF8.GetBytes(GuidFormatters.Stringyfi(Guid.NewGuid())),
                 Name = serviceName,
             }, cancellationToken);

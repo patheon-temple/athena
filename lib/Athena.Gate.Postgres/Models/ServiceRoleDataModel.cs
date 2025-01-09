@@ -1,6 +1,6 @@
 namespace Athena.Gate.Postgres.Models;
 
-public class ServiceClaimDataModel
+public class ServiceRoleDataModel
 {
     public string Id { get; set; } = string.Empty;
     public string? DisplayName { get; set; }

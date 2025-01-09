@@ -29,7 +29,7 @@ public class AthenaPostgresRepository(
         CancellationToken cancellationToken)
     {
         var db = await GetDbContextAsync(cancellationToken);
-        var data = await db.UserAccounts.Include(x => x.Claims)
+        var data = await db.UserAccounts.Include(x => x.Roles)
             .FirstOrDefaultAsync(x => x.DeviceId != null && x.DeviceId.Equals(deviceId),
                 cancellationToken: cancellationToken);
 
@@ -60,7 +60,7 @@ public class AthenaPostgresRepository(
         DeviceId = null,
         Username = optionsSnapshot.Value.SuperuserUsername,
         PasswordHash = optionsSnapshot.Value.SuperuserPasswordEncoded,
-        Claims = [GlobalDefinitions.Claims.Superuser]
+        Roles = [GlobalDefinitions.Roles.Superuser]
     };
 
     public async Task<PantheonUser?> GetUserAccountByUsernameAsync(string username,
@@ -71,7 +71,7 @@ public class AthenaPostgresRepository(
             return SuperUser;
 
         var db = await GetDbContextAsync(cancellationToken);
-        var data = await db.UserAccounts.Include(x => x.Claims)
+        var data = await db.UserAccounts.Include(x => x.Roles)
             .FirstOrDefaultAsync(x => x.Username != null && x.Username.Equals(username),
                 cancellationToken: cancellationToken);
 
@@ -86,7 +86,7 @@ public class AthenaPostgresRepository(
         }
         var userAccountGuid = Guid.Parse(id);
         var db = await GetDbContextAsync(cancellationToken);
-        var data = await db.UserAccounts.Include(x => x.Claims)
+        var data = await db.UserAccounts.Include(x => x.Roles)
             .FirstOrDefaultAsync(x => x.Id == userAccountGuid,
                 cancellationToken: cancellationToken);
 
@@ -107,7 +107,7 @@ public class AthenaPostgresRepository(
 
         var db = await GetDbContextAsync(cancellationToken);
         var data = await db.ServiceAccounts
-            .Include(x => x.Claims)
+            .Include(x => x.Roles)
             .Where(x => x.Id == guid)
             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 

@@ -11,7 +11,7 @@ public static class ServiceMappers
         Id = GuidFormatters.Stringyfi(data.Id),
         Name = data.Name,
         AuthorizationCode = data.AuthorizationCode,
-        Claims = data.Claims.Select(x => x.Id).ToArray(),
+        Roles = data.Roles.Select(x => x.Id).ToArray(),
     };
 
     public static ServiceAccountDataModel ToDataModel(PantheonService service)=> new()
@@ -19,7 +19,7 @@ public static class ServiceMappers
         Id =  string.IsNullOrWhiteSpace(service.Id) ? Guid.NewGuid() : Guid.Parse(service.Id),
         Name = service.Name,
         AuthorizationCode = service.AuthorizationCode,
-        Claims = service.Claims.Select(x => new ServiceClaimDataModel
+        Roles = service.Roles.Select(x => new ServiceRoleDataModel
         {
             Id = x
         }).ToArray(),

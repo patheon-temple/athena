@@ -7,8 +7,8 @@ public sealed class AthenaDbContext(DbContextOptions<AthenaDbContext> options) :
 {
     public DbSet<UserAccountDataModel> UserAccounts { get; set; }
     public DbSet<ServiceAccountDataModel> ServiceAccounts { get; set; }
-    public DbSet<UserClaimDataModel> UserClaims { get; set; }
-    public DbSet<ServiceClaimDataModel> ServiceClaims { get; set; }
+    public DbSet<UserRoleDataModel> UserRoles { get; set; }
+    public DbSet<ServiceRoleDataModel> ServiceRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -16,46 +16,46 @@ public sealed class AthenaDbContext(DbContextOptions<AthenaDbContext> options) :
 
         CreateUserAccounts(modelBuilder);
         CreateServiceAccounts(modelBuilder);
-        CreateClaims(modelBuilder);
-        CreateUserClaims(modelBuilder);
-        CreateServiceClaims(modelBuilder);
+        CreateRoles(modelBuilder);
+        CreateUserRoles(modelBuilder);
+        CreateServiceRoles(modelBuilder);
     }
 
-    private static void CreateClaims(ModelBuilder modelBuilder)
+    private static void CreateRoles(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<UserClaimDataModel>()
+        modelBuilder.Entity<UserRoleDataModel>()
             .HasKey(x => x.Id);
 
-        modelBuilder.Entity<UserClaimDataModel>()
+        modelBuilder.Entity<UserRoleDataModel>()
             .Property(x => x.Description)
             .HasMaxLength(256);
 
-        modelBuilder.Entity<UserClaimDataModel>()
+        modelBuilder.Entity<UserRoleDataModel>()
             .Property(x => x.DisplayName)
             .HasMaxLength(128);
 
-        modelBuilder.Entity<UserClaimDataModel>()
+        modelBuilder.Entity<UserRoleDataModel>()
             .Property(x => x.Id)
             .HasMaxLength(128)
             .IsRequired();
     }
 
-    private static void CreateServiceClaims(ModelBuilder modelBuilder)
+    private static void CreateServiceRoles(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ServiceAccountDataModel>()
-            .HasMany(x => x.Claims)
+            .HasMany(x => x.Roles)
             .WithMany(x => x.Accounts)
             .UsingEntity<ServiceAccountScopeDataModel>()
-            .ToTable("ServicesClaims");
+            .ToTable("ServiceRoles");
     }
 
-    private static void CreateUserClaims(ModelBuilder modelBuilder)
+    private static void CreateUserRoles(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserAccountDataModel>()
-            .HasMany(x => x.Claims)
+            .HasMany(x => x.Roles)
             .WithMany(x => x.Accounts)
             .UsingEntity<UserAccountScopeDataModel>()
-            .ToTable("UsersClaims");
+            .ToTable("UserRoles");
     }
 
     private static void CreateServiceAccounts(ModelBuilder modelBuilder)

@@ -8,7 +8,7 @@ public class UserAccountMongoDataModel
     [BsonId, BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = string.Empty;
 
-    [BsonIgnoreIfDefault] public string[] Claims { get; set; } = [];
+    [BsonIgnoreIfDefault] public string[] Roles { get; set; } = [];
 
     [BsonIgnoreIfDefault, BsonIgnoreIfNull]
     public string? DeviceId { get; set; }
@@ -18,4 +18,7 @@ public class UserAccountMongoDataModel
 
     [BsonIgnoreIfDefault, BsonIgnoreIfNull]
     public string? Username { get; set; }
+    
+    [BsonIgnoreIfDefault, BsonIgnoreIfNull]
+    public Dictionary<string, object> CustomProperties { get; set; } = new();
 }

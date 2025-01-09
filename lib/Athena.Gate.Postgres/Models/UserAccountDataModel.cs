@@ -6,5 +6,5 @@ public class UserAccountDataModel
     public string? DeviceId { get; set; }
     public string? Username { get; set; }
     public byte[]? PasswordHash { get; set; }
-    public ICollection<UserClaimDataModel> Claims { get; set; } = new List<UserClaimDataModel>();
+    public ICollection<UserRoleDataModel> Roles { get; set; } = new List<UserRoleDataModel>();
 }

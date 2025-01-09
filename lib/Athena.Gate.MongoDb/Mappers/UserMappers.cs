@@ -10,10 +10,11 @@ public static class UserMappers
         return new PantheonUser
         {
             Id = dataModel.Id,
-            Claims = dataModel.Claims,
+            Roles = dataModel.Roles,
             DeviceId = dataModel.DeviceId,
             PasswordHash = dataModel.PasswordHash,
-            Username = dataModel.Username
+            Username = dataModel.Username,
+            CustomProperties = dataModel.CustomProperties,
         };
     }
     
@@ -22,10 +23,11 @@ public static class UserMappers
         return new UserAccountMongoDataModel
         {
             Id = dataModel.Id,
-            Claims = dataModel.Claims,
+            Roles = dataModel.Roles,
             Username = dataModel.Username,
             DeviceId = dataModel.DeviceId,
             PasswordHash = dataModel.PasswordHash,
+            CustomProperties = dataModel.CustomProperties.ToDictionary(),
         };
     }
 }

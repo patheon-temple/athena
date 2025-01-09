@@ -11,7 +11,7 @@ public static class ServiceMappers
         {
             Id = dataModel.Id,
             Name = dataModel.Name,
-            Claims = dataModel.Claims,
+            Roles = dataModel.Roles,
             AuthorizationCode = dataModel.AuthorizationCode
         };
     }
@@ -22,7 +22,7 @@ public static class ServiceMappers
         {
             Id = dataModel.Id,
             Name = dataModel.Name,
-            Claims = dataModel.Claims,
+            Roles = dataModel.Roles,
             AuthorizationCode = dataModel.AuthorizationCode
         };
     }

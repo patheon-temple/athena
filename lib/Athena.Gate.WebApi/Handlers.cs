@@ -52,7 +52,7 @@ public static class Handlers
         [FromServices] IAthenaAdminApi adminApi, CancellationToken cancellationToken = default)
     {
         var identity = await adminApi.CreateUserAsync(request.DeviceId, request.Username, request.Password,
-            request.Claims, cancellationToken);
+            request.Roles, cancellationToken);
         return Results.CreatedAtRoute(nameof(GetUserAccountByIdAsync), new { id = identity.Id },
             new PantheonUser(identity));
     }
@@ -61,7 +61,7 @@ public static class Handlers
         [FromBody] CreateServiceAccountRequest request,
         [FromServices] IAthenaAdminApi adminApi, CancellationToken cancellationToken = default)
     {
-        var identity = await adminApi.CreateServiceAccountAsync(request.ServiceName, request.Claims, cancellationToken);
+        var identity = await adminApi.CreateServiceAccountAsync(request.ServiceName, request.Roles, cancellationToken);
         return Results.CreatedAtRoute(nameof(GetUserAccountByIdAsync), new { id = identity.Id },
             new ServiceAccount
             {
