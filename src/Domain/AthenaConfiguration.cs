@@ -7,11 +7,11 @@ namespace Athena.SDK.Domain
     {
         public string SuperuserUsername { get; set; } = null!;
         public string SuperuserPassword { get; set; } = null!;
-        public Guid SuperuserId { get; set; }
+        public string SuperuserId { get; set; } = null!;
         public byte[] SuperuserPasswordEncoded => Passwords.EncodePassword(SuperuserPassword);
 
-        public bool IsSuperUser(Guid id) => id.Equals(SuperuserId);
+        public bool IsSuperUserId(string id) => id.Equals(SuperuserId);
 
-        public bool IsSuperUser(string username) => SuperuserUsername.Equals(username);
+        public bool IsSuperUserUsername(string username) => SuperuserUsername.Equals(username);
     }
 }

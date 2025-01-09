@@ -4,9 +4,9 @@ namespace Athena.SDK.Models
 {
     public class PantheonService
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public byte[] AuthorizationCode { get; set; } = Array.Empty<byte>();
-        public string[] Scopes { get; set; } = Array.Empty<string>();
+        public string[] Roles { get; set; } = Array.Empty<string>();
     }
 }

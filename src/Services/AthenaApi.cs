@@ -1,8 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Athena.SDK.Data;
-using Athena.SDK.Mappers;
 using Athena.SDK.Models;
 
 namespace Athena.SDK.Services
@@ -10,39 +8,40 @@ namespace Athena.SDK.Services
     public sealed class AthenaApi : IAthenaApi
     {
         private readonly IPasswordService _passwordService;
-        private readonly IAthenaRepository _athenaRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IServiceRepository _serviceRepository;
 
-        public AthenaApi(IPasswordService passwordService,
-            IAthenaRepository athenaRepository)
+        public AthenaApi(IPasswordService passwordService, IUserRepository userRepository, IServiceRepository serviceRepository)
         {
             _passwordService = passwordService;
-            _athenaRepository = athenaRepository;
+            _userRepository = userRepository;
+            _serviceRepository = serviceRepository;
         }
 
         public Task<bool> DoesUsernameExistAsync(string username, CancellationToken cancellationToken = default)
         {
             username = username.ToLower();
-            return _athenaRepository.DoesUsernameExistsAsync(username, cancellationToken);
+            return _userRepository.DoesUsernameExistsAsync(username, cancellationToken);
         }
 
         public async Task<bool> ValidateUserCredentialsByUsernameAsync(string username, string password,
             CancellationToken cancellationToken = default)
         {
-            var data = await _athenaRepository.GetUserAccountByUsernameAsync(username, cancellationToken);
+            var data = await _userRepository.GetUserAccountByUsernameAsync(username, cancellationToken);
             return data != null && _passwordService.VerifyUserAccountPassword(data.Id, data.PasswordHash!, password);
         }
 
-        public async Task<bool> ValidateServiceCodeAsync(Guid serviceId, string authorizationCode,
+        public async Task<bool> ValidateServiceCodeAsync(string serviceId, string authorizationCode,
             CancellationToken cancellationToken = default)
         {
-            var data = await _athenaRepository.GetServiceAccountAsync(serviceId, cancellationToken);
+            var data = await _serviceRepository.GetServiceAccountByIdAsync(serviceId, cancellationToken);
             return data != null && _passwordService.VerifyAuthorizationCode(data.AuthorizationCode, authorizationCode);
         }
 
-        public async Task<(string? NewPassword, ResetUserPasswordError? Error)> ResetUserPasswordAsync(Guid userId,
+        public async Task<(string? NewPassword, ResetUserPasswordError? Error)> ResetUserPasswordAsync(string userId,
             CancellationToken cancellationToken = default)
         {
-            var data = await _athenaRepository.GetUserAccountByIdAsync(userId, cancellationToken);
+            var data = await _userRepository.GetUserAccountByIdAsync(userId, cancellationToken);
 
             if (data is null)
             {
@@ -51,42 +50,42 @@ namespace Athena.SDK.Services
 
             data.PasswordHash = _passwordService.HashPassword(Guid.NewGuid().ToString("D"));
 
-            await _athenaRepository.UpdateUserAsync(data, cancellationToken);
+            await _userRepository.UpdateUserAsync(data, cancellationToken);
 
             return (_passwordService.DecodePassword(data.PasswordHash), null);
         }
 
-        public async Task<(PantheonIdentity?, GetValidatedEntityError?)> GetValidatedUserByDeviceIdAsync(
+        public async Task<(PantheonUser?, GetValidatedEntityError?)> GetValidatedUserByDeviceIdAsync(
             string deviceId,
             string password,
             CancellationToken cancellationToken = default)
         {
-            var identity = await _athenaRepository.GetUserAccountByDeviceIdAsync(deviceId, cancellationToken);
+            var identity = await _userRepository.GetUserAccountByDeviceIdAsync(deviceId, cancellationToken);
             return GetValidatedIdentityAsync(password, identity);
         }
 
 
-        public async Task<(PantheonIdentity?, GetValidatedEntityError?)> GetValidatedUserByUsernameAsync(
+        public async Task<(PantheonUser?, GetValidatedEntityError?)> GetValidatedUserByUsernameAsync(
             string username,
             string password,
             CancellationToken cancellationToken = default)
         {
-            var identity = await _athenaRepository.GetUserAccountByUsernameAsync(username, cancellationToken);
+            var identity = await _userRepository.GetUserAccountByUsernameAsync(username, cancellationToken);
             return GetValidatedIdentityAsync(password, identity);
         }
 
-        private (PantheonIdentity?, GetValidatedEntityError?) GetValidatedIdentityAsync(string password,
-            UserAccountDataModel? identity)
+        private (PantheonUser?, GetValidatedEntityError?) GetValidatedIdentityAsync(string password,
+            PantheonUser? identity)
         {
             if (identity is null) return (null, GetValidatedEntityError.IdentityNotFound);
 
             if (_passwordService.VerifyUserAccountPassword(identity.Id, identity.PasswordHash!, password))
-                return (IdentityMappers.ToDomain(identity), null);
+                return (identity, null);
 
             return (null, GetValidatedEntityError.InvalidCredentials);
         }
 
-        public async Task<(PantheonService?, GetValidatedEntityError?)> GetValidatedServiceAsync(Guid serviceId,
+        public async Task<(PantheonService?, GetValidatedEntityError?)> GetValidatedServiceAsync(string serviceId,
             string authorizationCode,
             CancellationToken cancellationToken = default)
         {
@@ -99,12 +98,10 @@ namespace Athena.SDK.Services
             return (null, GetValidatedEntityError.InvalidCredentials);
         }
 
-        private async Task<PantheonService?> GetServiceAccountByIdAsync(Guid serviceId,
+        private async Task<PantheonService?> GetServiceAccountByIdAsync(string serviceId,
             CancellationToken cancellationToken)
         {
-            var data = await _athenaRepository.GetServiceAccountAsync(serviceId, cancellationToken);
-
-            return data == null ? null : ServiceMappers.ToDomain(data);
+            return await _serviceRepository.GetServiceAccountByIdAsync(serviceId, cancellationToken);
         }
     }
 }

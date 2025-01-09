@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Athena.SDK.Crypto;
-using Athena.SDK.Data;
 using Athena.SDK.Definitions;
-using Athena.SDK.Mappers;
+using Athena.SDK.Formatters;
 using Athena.SDK.Models;
 using FluentValidation;
 
@@ -16,19 +14,21 @@ namespace Athena.SDK.Services
     public sealed class AthenaAdminApi : IAthenaAdminApi
     {
         private readonly IAthenaApi _athenaApi;
-        private readonly IAthenaRepository _athenaRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IServiceRepository _serviceRepository;
 
-        public AthenaAdminApi(IAthenaRepository athenaRepository, IAthenaApi athenaApi)
+        public AthenaAdminApi( IAthenaApi athenaApi, IServiceRepository serviceRepository, IUserRepository userRepository)
         {
-            _athenaRepository = athenaRepository;
             _athenaApi = athenaApi;
+            _serviceRepository = serviceRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<PantheonIdentity> CreateUserAsync(
+        public async Task<PantheonUser> CreateUserAsync(
             string? deviceId,
             string? username,
             string? password,
-            string[] scopes,
+            string[] roles,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(deviceId) && string.IsNullOrWhiteSpace(username))
@@ -40,26 +40,20 @@ namespace Athena.SDK.Services
                 await IsUsernameAndPasswordValidOrThrowAsync(username, password, cancellationToken);
             }
 
-            scopes = scopes.Where(x => !x.Equals(GlobalDefinitions.Scopes.Superuser)).ToArray();
+            roles = roles.Where(x => !x.Equals(GlobalDefinitions.Roles.Superuser)).ToArray();
 
-            var scopeEntities = await _athenaRepository.GetUserScopesAsync(scopes, cancellationToken);
-
-            var identity = new UserAccountDataModel
+           return await _userRepository.CreateUserAccountAsync(new PantheonUser
             {
-                DeviceId = deviceId,
+                Roles = roles,
                 PasswordHash = string.IsNullOrWhiteSpace(password) ? null : Passwords.HashPassword(password),
                 Username = username?.ToLower(),
-                Scopes = scopeEntities
-            };
-            await _athenaRepository.CreateUserAccountAsync(identity, cancellationToken);
-
-            return IdentityMappers.ToDomain(identity);
+                DeviceId = deviceId
+            }, cancellationToken);
         }
 
-        public async Task<PantheonIdentity?> GetUserAccountByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public  Task<PantheonUser?> GetUserAccountByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            var data = await _athenaRepository.GetUserAccountByIdAsync(id, cancellationToken);
-            return data is null ? null : IdentityMappers.ToDomain(data);
+            return _userRepository.GetUserAccountByIdAsync(id, cancellationToken);
         }
 
         private async Task IsUsernameAndPasswordValidOrThrowAsync(string username, string? password,
@@ -78,40 +72,27 @@ namespace Athena.SDK.Services
             if (!validationResult.IsValid) throw new ValidationException(validationResult.Errors);
         }
 
-        public async Task<PantheonService> CreateServiceAccountAsync(string serviceName, string[] requiredScopes,
+        public async Task<PantheonService> CreateServiceAccountAsync(string serviceName, string[] roles,
             CancellationToken cancellationToken = default)
         {
-            requiredScopes = requiredScopes.Where(x => !x.Equals(GlobalDefinitions.Scopes.Superuser)).ToArray();
-
-            var scopes = await _athenaRepository.GetServiceAccountScopesAsync(requiredScopes, cancellationToken);
-
-            var salt = new byte[512];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(salt);
-
-            var serviceAccountDataModel = new ServiceAccountDataModel
+            roles = roles.Where(x => !x.Equals(GlobalDefinitions.Roles.Superuser)).ToArray();
+            return await _serviceRepository.CreateServiceAccountAsync(new PantheonService
             {
-                Id = Guid.NewGuid(),
+                Roles = roles,
+                AuthorizationCode = Encoding.UTF8.GetBytes(GuidFormatters.Stringyfi(Guid.NewGuid())),
                 Name = serviceName,
-                AuthorizationCode = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString("N")),
-                Scopes = scopes,
-            };
-            var entity = await _athenaRepository.CreateServiceAccountAsync(serviceAccountDataModel, cancellationToken);
-            return ServiceMappers.ToDomain(entity);
+            }, cancellationToken);
         }
 
-
-        public async Task<PantheonService?> GetServiceAccountByIdAsync(Guid serviceId,
+        public async Task<PantheonService?> GetServiceAccountByIdAsync(string serviceId,
             CancellationToken cancellationToken = default)
         {
-            var data = await _athenaRepository.GetServiceAccountAsync(serviceId, cancellationToken);
-
-            return data == null ? null : ServiceMappers.ToDomain(data);
+            return await _serviceRepository.GetServiceAccountByIdAsync(serviceId, cancellationToken);
         }
 
-        public Task<bool> ServiceAccountExistsAsync(Guid serviceId, CancellationToken cancellationToken = default)
+        public Task<bool> ServiceAccountExistsAsync(string serviceId, CancellationToken cancellationToken = default)
         {
-            return _athenaRepository.HasServiceAccountWithIdAsync(serviceId, cancellationToken);
+            return _serviceRepository.DoesServiceAccountWithIdExistsAsync(serviceId, cancellationToken);
         }
     }
 }
