@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using Athena.SDK.Crypto;
 using Athena.SDK.Domain;
@@ -20,15 +19,15 @@ namespace Athena.SDK.Services
             return Passwords.HashPassword(password);
         }
 
-        public bool VerifyUserAccountPassword(PantheonIdentity pantheonIdentity, string password)
+        public bool VerifyUserAccountPassword(PantheonUser pantheonUser, string password)
         {
-            if (_configuration.IsSuperUser(pantheonIdentity.Id)) return password.Equals(_configuration.SuperuserPassword);
-            return VerifyUserAccountPassword(pantheonIdentity.Id, pantheonIdentity.PasswordHash!, password);
+            if (_configuration.IsSuperUserUsername(pantheonUser.Id)) return password.Equals(_configuration.SuperuserPassword);
+            return VerifyUserAccountPassword(pantheonUser.Id, pantheonUser.PasswordHash!, password);
         }
 
-        public bool VerifyUserAccountPassword(Guid accountId, byte[] hash, string password)
+        public bool VerifyUserAccountPassword(string accountId, byte[] hash, string password)
         {
-            if (_configuration.IsSuperUser(accountId)) return password.Equals(_configuration.SuperuserPassword);
+            if (_configuration.IsSuperUserId(accountId)) return password.Equals(_configuration.SuperuserPassword);
             return Passwords.VerifyHashedPassword(hash, password);
         }
 

@@ -3,6 +3,7 @@ using Athena.Gate.WebApi.Interop.Requests;
 using Athena.Gate.WebApi.Interop.Responses;
 using Athena.Gate.WebApi.Interop.Shared;
 using Athena.SDK;
+using Athena.SDK.Formatters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +16,7 @@ public static class Handlers
         [FromServices] AthenaRequestContext context)
     {
         if (context.UserId == null) return Results.BadRequest();
-        var (newPwd, error) =await athenaApi.ResetUserPasswordAsync(context.UserId.Value);
+        var (newPwd, error) =await athenaApi.ResetUserPasswordAsync(GuidFormatters.Stringyfi(context.UserId.Value));
 
         if (error is not null)
         {
@@ -35,7 +36,7 @@ public static class Handlers
     }
 
     public static async Task<IResult> GetUserAccountByIdAsync(
-        [FromRoute(Name = "id")] Guid id,
+        [FromRoute(Name = "id")] string id,
         [FromServices] IAthenaAdminApi adminApi,
         CancellationToken cancellationToken = default)
     {
@@ -71,7 +72,7 @@ public static class Handlers
     }
 
     public static async Task<IResult> GetServiceAccountByIdAsync(
-        [FromRoute(Name = "id")] Guid id,
+        [FromRoute(Name = "id")] string id,
         [FromServices] IAthenaAdminApi adminApi, CancellationToken cancellationToken = default)
     {
         var identity = await adminApi.GetServiceAccountByIdAsync(id, cancellationToken);

@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Athena.Gate.Postgres", "Ath
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Athena.Gate.WebApi", "Athena.Gate.WebApi\Athena.Gate.WebApi.csproj", "{AAE2430F-427F-40A2-9ABD-E708FF60BA98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Athena.Gate.MongoDb", "Athena.Gate.MongoDb\Athena.Gate.MongoDb.csproj", "{9764242E-83AF-4887-A3FB-B43CAAF4A218}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,7 @@ Global
 		{1731C20E-4398-4E6D-A600-AAA7E7C02DD8} = {70560F27-914F-4054-9E15-19EB593CD93C}
 		{80CC62D1-308E-42AE-B37D-36FA8EB3F70B} = {70560F27-914F-4054-9E15-19EB593CD93C}
 		{AAE2430F-427F-40A2-9ABD-E708FF60BA98} = {70560F27-914F-4054-9E15-19EB593CD93C}
+		{9764242E-83AF-4887-A3FB-B43CAAF4A218} = {70560F27-914F-4054-9E15-19EB593CD93C}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1731C20E-4398-4E6D-A600-AAA7E7C02DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -31,5 +34,9 @@ Global
 		{AAE2430F-427F-40A2-9ABD-E708FF60BA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAE2430F-427F-40A2-9ABD-E708FF60BA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAE2430F-427F-40A2-9ABD-E708FF60BA98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9764242E-83AF-4887-A3FB-B43CAAF4A218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9764242E-83AF-4887-A3FB-B43CAAF4A218}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9764242E-83AF-4887-A3FB-B43CAAF4A218}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9764242E-83AF-4887-A3FB-B43CAAF4A218}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -2,9 +2,9 @@ using System;
 
 namespace Athena.SDK.Models
 {
-    public class PantheonIdentity
+    public class PantheonUser
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public string? DeviceId { get; set; }
         public byte[]? PasswordHash { get; set; }
 

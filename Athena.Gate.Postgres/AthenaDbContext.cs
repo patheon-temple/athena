@@ -1,4 +1,4 @@
-using Athena.SDK.Data;
+using Athena.Gate.Postgres.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Athena.Gate.Postgres;
